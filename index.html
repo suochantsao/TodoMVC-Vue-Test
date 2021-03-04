@@ -44,7 +44,7 @@
         
         <div class="activeList">
 
-          <div class="listText listStyle" v-for="todo in activeTodos">
+          <div class="listText listStyle" v-for="todo in activeTodos" v-if="allActive">
 
             <span><i class="far fa-circle" v-on:click="selectTodo(todo)"></i></span>
             <input
@@ -64,7 +64,7 @@
           
         </div>
 
-        <ul class="completeList" v-for="todo in completeTodos">
+        <ul class="completeList" v-for="todo in completeTodos" v-if="allComplete">
 
           <li class="listText listStyle">
             <span><i class="far fa-check-circle" v-on:click="cancleTodo(todo)"></i></span>
@@ -81,13 +81,13 @@
       
           <div class="listNum">
             <!-- 計算目前todolist的數量 -->
-            <span class="itemNum">0</span> items left
+            <span class="itemNum">{{todoLength}}</span> items left
 
           </div>
 
-          <span class="unPick" id="allTodo">All</span>
-          <span class="unPick" id="activeTodo">Active</span>
-          <span class="unPick" id="completeTodo">Completed</span>
+          <span class="unPick" id="allTodo" v-on:click="allRender" >All</span>
+          <span class="unPick" id="activeTodo" v-on:click="actRender()" >Active</span>
+          <span class="unPick" id="completeTodo" v-on:click="completeRender()" >Completed</span>
           <span class="unPick" id="clearAll" v-on:click="delSelTodo">Clear completed</span>
       
         </div>

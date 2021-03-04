@@ -2,7 +2,10 @@ const vm = new Vue({
     el:'#app',
     data:{
         newTodo: 'HelloWorld',
+        todoLength: 0,
         editedTodo: null,
+        allActive: true,
+        allComplete: true,
         editContent: {},
         activeTodos: [],
         completeTodos: []
@@ -22,6 +25,7 @@ const vm = new Vue({
             else{
                 todoItem.content = value;
                 this.activeTodos.push(todoItem);
+                this.todoLength = this.activeTodos.length;
             }
             this.newTodo = '';
 
@@ -30,10 +34,13 @@ const vm = new Vue({
         removeTodo(todo){
             let currentIdx = this.activeTodos.indexOf(todo);
             this.activeTodos.splice(currentIdx,1);
+            this.todoLength = this.activeTodos.length;
         },
+        // 移除完成的指定todo
         removeDoneTodo(todo){
             let currentIdx = this.completeTodos.indexOf(todo);
             this.completeTodos.splice(currentIdx,1);
+            this.todoLength = this.activeTodos.length;
         },
         // 修改todo的內容
         editTodo(todo){
@@ -53,24 +60,46 @@ const vm = new Vue({
                 this.editContent = {};
             }
         },
+        // 選擇指定的todo
         selectTodo(todo){
             console.log("MDFK NMSL");
             let currentIdx = this.activeTodos.indexOf(todo);
             this.completeTodos.push(todo);
             this.activeTodos.splice(currentIdx,1);
+            this.todoLength = this.activeTodos.length;
         },
+        // 取消選取指定的todo
         cancleTodo(todo){
             let currentIdx = this.completeTodos.indexOf(todo);
             this.activeTodos.push(todo);
             this.completeTodos.splice(currentIdx,1);
+            this.todoLength = this.activeTodos.length;
         },
+        // 刪除全部todo
         delSelTodo(){
             this.completeTodos = [];
         },
+        // 選擇全部的todo
         selAllTodo(){
             let listLength = this.activeTodos.length;
             this.completeTodos = this.activeTodos.slice(0,listLength);
             this.activeTodos = [];
+            this.todoLength = this.activeTodos.length;
+        },
+        // 顯示所有未完成的todo
+        actRender(){
+            this.allActive = true;
+            this.allComplete = false;
+        },
+        // 顯示所有已完成的todo
+        completeRender(){
+            this.allActive = false;
+            this.allComplete = true;
+        },
+        // 顯示所有todo
+        allRender(){
+            this.allActive = true;
+            this.allComplete = true;
         }
     }
 
