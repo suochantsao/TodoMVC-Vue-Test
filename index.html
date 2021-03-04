@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.css'/>
     <link rel="stylesheet" href="css/all.min.css" >
-    <title>TodoMVC</title>
+    <title>Vue TodoMVC</title>
   </head>
   <body>
     
@@ -26,32 +26,60 @@
             </div>
 
             <!-- 輸入項目的區塊 -->
-            <!-- ?事件要綁定點擊enter之後新增代辦事項 -->
-            <input type="text" placeholder="What needs to be done?" value="" id="inputPress">
+            <input 
+              type="text" 
+              placeholder="What needs to be done?" 
+              value="" 
+              id="inputPress"
+              v-model="newTodo"
+              v-on:keyup.enter="addTodo"
+              >
 
         </div>
 
-        <div class="completeList"></div>
-        <div class="activeList"></div>
+        <!-- <ul class="completeList">
+
+          <li class="listText listStyle" v-for="item in todos">
+            <span><i class="far fa-check-circle"></i></span>
+            <input class="checkList" type="text" :value=item.content>
+            <span><i class="fas fa-times"></i></span>
+          </li>
+
+        </ul> -->
+        
+        <div class="activeList">
+
+          <div class="listText listStyle" v-for="item in todos">
+            <span><i class="far fa-circle"></i></span>
+            <input 
+              type="text" 
+              :value=item.content
+              v-on:click="editTodo(item)"
+              >
+            <span><i class="fas fa-times" v-on:click="removeTodo(item)"></i></span>
+          </div>
+          
+        </div>
+
+        <!-- 操作和修改提示 -->
+        <div class="botInfo">
+      
+          <div class="listNum">
+            <!-- 計算目前todolist的數量 -->
+            <span class="itemNum">0</span> items left
+
+          </div>
+
+          <span class="unPick" id="allTodo">All</span>
+          <span class="unPick" id="activeTodo">Active</span>
+          <span class="unPick" id="completeTodo">Completed</span>
+          <span class="unPick" id="clearAll" >Clear completed</span>
+      
+        </div>
 
     </div>
 
-    <!-- 操作和修改提示 -->
-    <footer>
-      
-      <div class="listNum">
-        <!-- 計算目前todolist的數量 -->
-        <span class="itemNum">0</span> items left
 
-      </div>
-
-        <span class="unPick" id="allTodo">All</span>
-        <span class="unPick" id="activeTodo">Active</span>
-        <span class="unPick" id="completeTodo">Completed</span>
-        <span class="unPick" id="clearAll" >Clear completed</span>
-      
-
-    </footer>
 
     <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.9/vue.js' integrity='sha512-o9SZrtqlGkpa7EF+dDrNjEdRFFYhymlrBzDKpolHNolxsyx0IcXAbEm9i1e8QpoiMgEdKZVtY8XiK1t8i6jVDA==' crossorigin='anonymous'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js'></script>
