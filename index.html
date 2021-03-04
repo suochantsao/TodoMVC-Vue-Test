@@ -22,7 +22,12 @@
 
             <!-- 選取全部todo的icon -->
             <div class="chevronIcon">
-              <i class="fas fa-chevron-down" id="selectAll"></i>
+              <i 
+                class="fas fa-chevron-down" 
+                id="selectAll" 
+                v-on:click="selAllTodo"
+              >
+              </i>
             </div>
 
             <!-- 輸入項目的區塊 -->
@@ -36,30 +41,40 @@
               >
 
         </div>
-
-        <!-- <ul class="completeList">
-
-          <li class="listText listStyle" v-for="item in todos">
-            <span><i class="far fa-check-circle"></i></span>
-            <input class="checkList" type="text" :value=item.content>
-            <span><i class="fas fa-times"></i></span>
-          </li>
-
-        </ul> -->
         
         <div class="activeList">
 
-          <div class="listText listStyle" v-for="item in todos">
-            <span><i class="far fa-circle"></i></span>
-            <input 
+          <div class="listText listStyle" v-for="todo in activeTodos">
+
+            <span><i class="far fa-circle" v-on:click="selectTodo(todo)"></i></span>
+            <input
+              class="grey"
               type="text" 
-              :value=item.content
-              v-on:click="editTodo(item)"
-              >
-            <span><i class="fas fa-times" v-on:click="removeTodo(item)"></i></span>
+              v-if="editContent === todo"
+              v-model="editedTodo"
+              v-on:keyup.enter="doneTodo(todo)"
+            >
+            <label
+              v-if="editContent !== todo"
+              v-on:dblclick="editTodo(todo)"
+            >{{todo.content}}</label>
+            <span><i class="fas fa-times" v-on:click="removeTodo(todo)"></i></span>
+
           </div>
           
         </div>
+
+        <ul class="completeList" v-for="todo in completeTodos">
+
+          <li class="listText listStyle">
+            <span><i class="far fa-check-circle" v-on:click="cancleTodo(todo)"></i></span>
+            <label class="checkList">
+              {{todo.content}}
+            </label>
+            <span><i class="fas fa-times" v-on:click="removeDoneTodo(todo)"></i></span>
+          </li>
+
+        </ul>
 
         <!-- 操作和修改提示 -->
         <div class="botInfo">
@@ -73,9 +88,12 @@
           <span class="unPick" id="allTodo">All</span>
           <span class="unPick" id="activeTodo">Active</span>
           <span class="unPick" id="completeTodo">Completed</span>
-          <span class="unPick" id="clearAll" >Clear completed</span>
+          <span class="unPick" id="clearAll" v-on:click="delSelTodo">Clear completed</span>
       
         </div>
+        
+          <span class="infoMsg infoColor">Double-click to edit a todo</span>
+          <span class="infoColor">Written by Suo Chan</span>
 
     </div>
 
