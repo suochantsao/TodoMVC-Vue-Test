@@ -3,6 +3,7 @@ const vm = new Vue({
     data:{
         newTodo: 'HelloWorld',
         todoLength: 0,
+        todoId: 1,
         editedTodo: null,
         allActive: true,
         allComplete: true,
@@ -13,10 +14,8 @@ const vm = new Vue({
     methods:{
         // 新增todo
         addTodo(){
-            let todoItem = {
-                "completed":false
-            };
-            let value    = this.newTodo.trim();
+            let todoItem   = {};
+            let value      = this.newTodo.trim();
 
             if(value === '' ){
                 Swal.fire(`請先輸入待辦事項`);
@@ -24,21 +23,46 @@ const vm = new Vue({
             }
             else{
                 todoItem.content = value;
+                todoItem.delId   = this.todoId;
+                this.todoId+=1;
+
                 this.activeTodos.push(todoItem);
-                this.todoLength = this.activeTodos.length;
+
+                let that    = this;
+
+                axios
+                  .post('https://guarded-hamlet-24255.herokuapp.com/todo3', todoItem)
+                  .then(function (res) {
+                      console.log(res);
+                  })
+                  .catch(function (error) {
+                      console.log(error);
+                  });
+
             }
+            this.todoLength = this.activeTodos.length;
             this.newTodo = '';
 
         },
         // 移除指定的todo
         removeTodo(todo){
             let currentIdx = this.activeTodos.indexOf(todo);
+
+            // `this` points to the vm instance
+            let that = this;
+
+            axios
+              .delete(`https://guarded-hamlet-24255.herokuapp.com/todo3/${todo.delId}`)
+              .then(res => console.log(res))
+              .catch(err => console.error(err));
+
             this.activeTodos.splice(currentIdx,1);
             this.todoLength = this.activeTodos.length;
         },
         // 移除完成的指定todo
         removeDoneTodo(todo){
             let currentIdx = this.completeTodos.indexOf(todo);
+            console.log(currentIdx);
             this.completeTodos.splice(currentIdx,1);
             this.todoLength = this.activeTodos.length;
         },
@@ -101,6 +125,17 @@ const vm = new Vue({
             this.allActive = true;
             this.allComplete = true;
         }
+    },
+    created:function(){
+        // `this` points to the vm instance
+        let that = this;
+
+        axios
+          .get('https://guarded-hamlet-24255.herokuapp.com/todo3')
+          .then((res) =>  {
+            that.activeTodos = res.data;
+            that.todoLength = that.activeTodos.length;
+          });
     }
 
 })
