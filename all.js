@@ -28,18 +28,12 @@ const vm = new Vue({
 
                 this.activeTodos.push(todoItem);
 
-                let that    = this;
-
                 axios
                   .post('https://guarded-hamlet-24255.herokuapp.com/todo3', todoItem)
-                  .then(function (res) {
-                      console.log(res);
-                  })
-                  .catch(function (error) {
-                      console.log(error);
-                  });
-
+                  .then( res => { console.log(res)})
+                  .catch( err => { console.log(err)});
             }
+
             this.todoLength = this.activeTodos.length;
             this.newTodo = '';
 
@@ -48,13 +42,10 @@ const vm = new Vue({
         removeTodo(todo){
             let currentIdx = this.activeTodos.indexOf(todo);
 
-            // `this` points to the vm instance
-            let that = this;
-
             axios
               .delete(`https://guarded-hamlet-24255.herokuapp.com/todo3/${todo.delId}`)
-              .then(res => console.log(res))
-              .catch(err => console.error(err));
+              .then( res => console.log(res))
+              .catch( err => console.error(err));
 
             this.activeTodos.splice(currentIdx,1);
             this.todoLength = this.activeTodos.length;
@@ -132,10 +123,13 @@ const vm = new Vue({
 
         axios
           .get('https://guarded-hamlet-24255.herokuapp.com/todo3')
-          .then((res) =>  {
+          .then( res => {
+            console.log(res);
             that.activeTodos = res.data;
             that.todoLength = that.activeTodos.length;
-          });
+          })
+          .catch( err => { console.log(err)})
+
     }
 
 })
